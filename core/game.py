@@ -10,13 +10,24 @@ from managers.SettingsManager import SettingsManager
 
 class Game:
     def __init__(self):
+        self.dt = 0
+        self.running = True
+        self.clock = pygame.time.Clock()
+
+        self.screen = None
+        self.screens_manager = None
+        self.inputs_manager = None
+        self.settings_manager = None
+
+    def init(self):
+        pygame.init()
+
         pygame.display.set_caption(SCREEN_TITLE)
         if os.path.exists(GAME_ICON):
             pygame.display.set_icon(pygame.image.load(GAME_ICON))
-        
+
         self.settings_manager = SettingsManager()
-        self.screens_manager = ScreensManager(self)
-        self.inputs_manager = InputsManager(self)
+        self.settings_manager.readIfExistsElseCreate()
 
         self.screen = pygame.display.set_mode(
             size=(
@@ -26,13 +37,10 @@ class Game:
             flags=pygame.FULLSCREEN if self.settings_manager.getSetting("fullscreen") else 0
         )
 
-        self.dt = 0
-        self.running = True
-        self.clock = pygame.time.Clock()
-
-    def init(self):
-        pygame.init()
-        self.settings_manager.readIfExistsElseCreate()
+        self.screens_manager = ScreensManager(self)
+        self.inputs_manager = InputsManager(self)
+        # Set the first screen here:
+        # self.screens_manager.set_screen(MainMenu)
 
     def run(self):
         self.init()

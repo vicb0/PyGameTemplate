@@ -6,8 +6,6 @@ class ScreensManager:
         self.game = game
         
         self.current_screen = None
-        # Set the first screen here:
-        # self.set_screen(screen object)
 
     def set_screen(self, screen):
         if self.current_screen:
