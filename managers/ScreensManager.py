@@ -1,14 +1,13 @@
 import pygame
 
-from screens.MainMenu import MainMenu
-
 
 class ScreensManager:
     def __init__(self, game):
         self.game = game
         
         self.current_screen = None
-        self.set_screen(MainMenu)
+        # Set the first screen here:
+        # self.set_screen(screen object)
 
     def set_screen(self, screen):
         if self.current_screen:
