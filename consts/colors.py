@@ -1,3 +1,4 @@
+# Feel free to add colors and/or change their values here, but don't remove them.
 # Basic Colors
 BLACK       = (0, 0, 0)
 WHITE       = (255, 255, 255)

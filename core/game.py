@@ -1,11 +1,16 @@
 import os
 import pygame
 
-from consts.default_settings import DEFAULT_SETTINGS
-from consts.metadata import SCREEN_TITLE, GAME_ICON_PATH, DEFAULT_SCREEN
+from consts import metadata
+from managers.AudioManager import AudioManager
 from managers.ScreensManager import ScreensManager
 from managers.InputsManager import InputsManager
 from managers.SettingsManager import SettingsManager
+
+
+SCREEN_TITLE = getattr(metadata, "SCREEN_TITLE", "Pygame")
+GAME_ICON_PATH = getattr(metadata, "GAME_ICON_PATH", "assets/icon.png")
+DEFAULT_SCREEN = getattr(metadata, "DEFAULT_SCREEN", "mainmenu")
 
 
 class Game:
@@ -18,6 +23,7 @@ class Game:
         self.screens_manager = None
         self.inputs_manager = None
         self.settings_manager = None
+        self.audio_manager = None
 
     def init(self):
         pygame.init()
@@ -26,7 +32,11 @@ class Game:
         if os.path.exists(GAME_ICON_PATH):
             pygame.display.set_icon(pygame.image.load(GAME_ICON_PATH))
 
-        self.settings_manager = SettingsManager(DEFAULT_SETTINGS)
+        self.audio_manager = AudioManager(self)
+        self.inputs_manager = InputsManager(self)
+        self.screens_manager = ScreensManager(self)
+        self.settings_manager = SettingsManager(self)
+
         self.settings_manager.readIfExistsElseCreate()
 
         self.screen = pygame.display.set_mode(
@@ -36,9 +46,6 @@ class Game:
             ),
             flags=pygame.FULLSCREEN if self.settings_manager.getSetting("fullscreen") else 0
         )
-
-        self.inputs_manager = InputsManager(self)
-        self.screens_manager = ScreensManager(self)
 
         self.screens_manager.set_screen(DEFAULT_SCREEN)
 

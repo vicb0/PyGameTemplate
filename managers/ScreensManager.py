@@ -4,8 +4,11 @@ import inspect
 
 import pygame
 
-from consts.metadata import SCREENS_FOLDER
+from consts import metadata
 from core.ScreenInterface import ScreenInterface
+
+
+SCREENS_FOLDER = getattr(metadata, "SCREENS_FOLDER", "screens")
 
 
 class ScreensManager:

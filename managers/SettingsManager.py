@@ -1,16 +1,35 @@
 import os
 import json
 
+from consts import default_settings
+
+
+DEFAULT_SETTINGS = getattr(default_settings, "DEFAULT_SETTINGS", {
+    "width": 800,
+    "height": 600,
+    "max_fps": 24,
+    "fullscreen": False,
+    "sfx_volume": 0.5,
+    "music_volume": 0.5
+})
+
 
 class SettingsManager:
-    def __init__(self, default_settings=None):
-        self.settings = default_settings or {
-            "width": 800,
-            "height": 600,
-            "fullscreen": False,
-            "max_fps": 60
-        }
+    def __init__(self, game):
+        self.game = game
+        self.settings = DEFAULT_SETTINGS
 
+    def setupAfterInit(self):
+        self.game.audio_manager.set_music_volume(self.game.settings_manager.getSetting("music_volume"))
+        self.game.audio_manager.set_sfx_volume(self.game.settings_manager.getSetting("sfx_volume"))
+
+    def setupAfterInitDecorator(func):
+        def wrapper(self, *args, **kwargs):
+            func(self, *args, **kwargs)
+            self.setupAfterInit()
+        return wrapper
+
+    @setupAfterInitDecorator
     def readSettingsFile(self, file_name="settings.json"):
         try:
             with open(file_name, "r", encoding="utf-8") as f:
@@ -18,6 +37,7 @@ class SettingsManager:
         except json.decoder.JSONDecodeError:
             pass
 
+    @setupAfterInitDecorator
     def writeSettingsFile(self, file_name="settings.json"):
         with open(file_name, "w", encoding="utf-8") as f:
             json.dump(self.settings, f, indent=4)

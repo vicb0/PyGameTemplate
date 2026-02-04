@@ -3,12 +3,13 @@ import pygame
 from consts.colors import *
 from components.Button import Button
 from components.Text import Text
-from consts.metadata import SCREEN_TITLE
+from consts import metadata
 from core.ScreenInterface import ScreenInterface
 from utils.imageUtils import load_scaled_image
 
 
 # This is an example of how to use this framework.
+SCREEN_TITLE = getattr(metadata, "SCREEN_TITLE", "Pygame")
 
 class MainMenu(ScreenInterface):
     def __init__(self, game):
