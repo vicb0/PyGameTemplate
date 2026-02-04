@@ -3,12 +3,12 @@ import json
 
 
 class SettingsManager:
-    def __init__(self):
-        self.settings = {
+    def __init__(self, default_settings=None):
+        self.settings = default_settings or {
             "width": 800,
             "height": 600,
-            "max_fps": 60,
-            "fullscreen": False
+            "fullscreen": False,
+            "max_fps": 60
         }
 
     def readSettingsFile(self, file_name="settings.json"):
@@ -22,8 +22,8 @@ class SettingsManager:
         with open(file_name, "w", encoding="utf-8") as f:
             json.dump(self.settings, f, indent=4)
     
-    def readIfExistsElseCreate(self):
-        if os.path.exists("settings.json"):
+    def readIfExistsElseCreate(self, file_name="settings.json"):
+        if os.path.exists(file_name):
             self.readSettingsFile()
         else:
             self.writeSettingsFile()

@@ -8,6 +8,6 @@ class InputsManager:
     def inputsListener(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.game.running = False
+                self.game.close()
             
             self.game.screens_manager.event_handler(event)

@@ -24,11 +24,24 @@ class Text:
         self._render()
 
     def _render(self):
-        self.image = self.font.render(
-            self.text,
-            self.antialias,
-            self.color
-        ).convert_alpha()
+        lines = self.text.split("\n")
+
+        rendered_lines = [
+            self.font.render(line, self.antialias, self.color).convert_alpha()
+            for line in lines
+        ]
+
+        line_height = self.font.get_linesize()
+
+        width = max(line.get_width() for line in rendered_lines)
+        height = line_height * len(rendered_lines)
+
+        self.image = pygame.Surface((width, height), pygame.SRCALPHA)
+
+        for i, line_surf in enumerate(rendered_lines):
+            x = (width - line_surf.get_width()) // 2
+            y = i * line_height
+            self.image.blit(line_surf, (x, y))
 
         self.rect = self.image.get_rect()
         self.set_position(self.pos)

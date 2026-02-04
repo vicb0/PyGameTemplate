@@ -1,2 +1,7 @@
 SCREEN_TITLE = "PyGame Template"
-GAME_ICON = "assets/icon.png"
+
+GAME_ICON_PATH = "assets/icon.png"
+
+SCREENS_FOLDER = "screens"
+
+DEFAULT_SCREEN = "mainmenu"

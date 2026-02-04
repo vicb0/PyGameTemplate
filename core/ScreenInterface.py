@@ -4,10 +4,13 @@ from abc import ABC, abstractmethod
 class ScreenInterface(ABC):
     def __init__(self, game):
         self.game = game
-        self.drawables = []
 
     @abstractmethod
     def event_handler(self, event):
+        pass
+
+    @abstractmethod
+    def update(self):
         pass
 
     @abstractmethod
