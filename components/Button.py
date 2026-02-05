@@ -18,7 +18,7 @@ class Button:
         hover_darkened=60,
         text_color=WHITE,
         center=False,
-        border_radius=5
+        border_radius=20
     ):
         self.center = center
         self.rect = pygame.Rect(rect)
@@ -39,8 +39,14 @@ class Button:
                 center=True
             )
 
+        self.mask = None
+
         self.bg = bg
         self.hover_bg = hover_bg or bg
+        if self.bg:
+            surface = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+            pygame.draw.rect(surface, (*self.bg, 255), surface.get_rect(), border_radius=self.border_radius)
+            self.mask = pygame.mask.from_surface(surface)
 
         self.image = None
         self.hover_image = None
@@ -50,6 +56,7 @@ class Button:
     def set_image(self, image, hover_darken=60):
         self.image = load_scaled_image(image, self.rect.size)
         self.hover_image = self.create_darkened_image(self.image, hover_darken)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def create_darkened_image(self, surface, hover_darkened):
         dark = surface.copy()
@@ -75,8 +82,21 @@ class Button:
             self.text.set_position(pos)
 
     def handle_hover(self, event):
-        if hasattr(event, "pos"):
-            self.hovered = self.rect.collidepoint(event.pos)
+        if not hasattr(event, "pos"):
+            return
+        
+        if not self.rect.collidepoint(event.pos):
+            self.hovered = False
+            return
+        
+        local_x = event.pos[0] - self.rect.x
+        local_y = event.pos[1] - self.rect.y
+
+        if self.mask:
+            self.hovered = self.mask.get_at((local_x, local_y))
+            print(self.hovered)
+        else:
+            self.hovered = True
 
     def handle_click(self, event):
         if self.hovered and event.button == 1:
