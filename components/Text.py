@@ -9,7 +9,8 @@ class Text:
         pos,
         color,
         center=False,
-        antialias=True
+        antialias=True,
+        visible=True
     ):
         self.text = text
         self.font = font
@@ -17,6 +18,7 @@ class Text:
         self.color = color
         self.center = center
         self.antialias = antialias
+        self.visible = visible
 
         self.image = None
         self.rect = None
@@ -46,6 +48,17 @@ class Text:
         self.rect = self.image.get_rect()
         self.set_position(self.pos)
 
+    def set_visible(self, visible):
+        if type(visible) != bool:
+            raise TypeError("Text visibility must be a boolean")
+        self.visible = visible
+
+    def only_if_visible(func):
+        def wrapper(self, *args, **kwargs):
+            if self.visible:
+                func(self, *args, **kwargs)
+        return wrapper
+
     def set_text(self, new_text):
         if new_text != self.text:
             self.text = new_text
@@ -63,5 +76,6 @@ class Text:
         else:
             self.rect.topleft = pos
 
+    @only_if_visible
     def draw(self, screen):
         screen.blit(self.image, self.rect)
