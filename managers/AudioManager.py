@@ -1,5 +1,7 @@
 import pygame
 
+from utils.resourceUtils import resource_path
+
 
 class AudioManager:
     def __init__(self, game):
@@ -16,9 +18,9 @@ class AudioManager:
         for sfx in self.sfxs.values():
             sfx["channel"].set_volume(vol)
 
-    def load_bgm(self, bgm):
+    def load_bgm(self, bgm_path):
         pygame.mixer.music.set_volume(self.game.settings_manager.getSetting("music_volume"))
-        pygame.mixer.music.load(bgm)
+        pygame.mixer.music.load(resource_path(bgm_path))
 
     def play_bgm(self):
         pygame.mixer.music.play(-1)
@@ -34,6 +36,8 @@ class AudioManager:
 
     def load_sfx(self, sfx_name, sfx_path):
         channel_id = None
+
+        sfx_path = resource_path(sfx_path)
 
         if self.sfxs.get(sfx_name) is None:
             channel_id = len(self.sfxs)
