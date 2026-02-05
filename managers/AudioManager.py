@@ -14,9 +14,10 @@ class AudioManager:
 
     def set_sfx_volume(self, vol):
         for sfx in self.sfxs.values():
-            sfx.set_volume(vol)
+            sfx["channel"].set_volume(vol)
 
     def load_bgm(self, bgm):
+        pygame.mixer.music.set_volume(self.game.settings_manager.getSetting("music_volume"))
         pygame.mixer.music.load(bgm)
 
     def play_bgm(self):
@@ -32,12 +33,27 @@ class AudioManager:
         pygame.mixer.music.stop()
 
     def load_sfx(self, sfx_name, sfx_path):
-        self.sfxs[sfx_name] = pygame.mixer.Sound(sfx_path)
+        channel_id = None
+
+        if self.sfxs.get(sfx_name) is None:
+            channel_id = len(self.sfxs)
+            pygame.mixer.set_num_channels(channel_id + 1)
+            channel = pygame.mixer.Channel(channel_id)
+            channel.set_volume(self.game.settings_manager.getSetting("sfx_volume"))
+        else:
+            channel_id = self.sfxs[sfx_name]["channel_id"]
+
+        self.sfxs[sfx_name] = {
+            "channel_id": channel_id,
+            "channel": channel,
+            "sfx": pygame.mixer.Sound(sfx_path)
+        }
 
     def play_sfx(self, sfx_name):
-        if sfx_name in self.sfxs:
-            self.sfxs[sfx_name].play()
+        if sfx_name in self.sfxs and not self.sfxs[sfx_name]["channel"].get_busy():
+            self.sfxs[sfx_name]["channel"].play(self.sfxs[sfx_name]["sfx"])
 
     def clear(self):
-        pygame.mixer.music.unload()
         self.sfxs.clear()
+        pygame.mixer.set_num_channels(0)
+        pygame.mixer.music.unload()
