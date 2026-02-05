@@ -11,14 +11,16 @@ class Button:
         text,
         font,
         rect,
-        on_click,
+        on_click=None,
         bg=None,
         hover_bg=None,
         image=None,
         hover_darkened=60,
         text_color=WHITE,
         center=False,
-        border_radius=20
+        border_radius=20,
+        enabled=True,
+        visible=True
     ):
         self.center = center
         self.rect = pygame.Rect(rect)
@@ -39,6 +41,8 @@ class Button:
                 center=True
             )
 
+        self.visible = visible
+        self.enabled = enabled
         self.mask = None
 
         self.bg = bg
@@ -81,6 +85,29 @@ class Button:
         if self.text:
             self.text.set_position(pos)
 
+    def set_visible(self, visible):
+        if type(visible) != bool:
+            raise TypeError("Button visibility must be a boolean")
+        self.visible = visible
+
+    def set_enabled(self, enabled):
+        if type(enabled) != bool:
+            raise TypeError("Button enabled must be a boolean")
+        self.enabled = enabled
+
+    def only_if_enabled(func):
+        def wrapper(self, *args, **kwargs):
+            if self.enabled:
+                func(self, *args, **kwargs)
+        return wrapper
+    
+    def only_if_visible(func):
+        def wrapper(self, *args, **kwargs):
+            if self.visible:
+                func(self, *args, **kwargs)
+        return wrapper
+
+    @only_if_visible
     def handle_hover(self, event):
         if not hasattr(event, "pos"):
             return
@@ -97,10 +124,12 @@ class Button:
         else:
             self.hovered = True
 
+    @only_if_enabled
     def handle_click(self, event):
-        if self.hovered and event.button == 1:
+        if self.on_click is not None and self.hovered and event.button == 1:
             self.on_click()
 
+    @only_if_visible
     def draw(self, screen):
         if self.image:
             img = self.hover_image if self.hovered else self.image
