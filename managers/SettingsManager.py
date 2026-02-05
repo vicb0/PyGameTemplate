@@ -4,20 +4,20 @@ import json
 from consts import default_settings
 
 
-DEFAULT_SETTINGS = getattr(default_settings, "DEFAULT_SETTINGS", {
-    "width": 800,
-    "height": 600,
-    "max_fps": 24,
-    "fullscreen": False,
-    "sfx_volume": 0.5,
-    "music_volume": 0.5
-})
+DEFAULT_SETTINGS = getattr(default_settings, "DEFAULT_SETTINGS", {})
 
 
 class SettingsManager:
     def __init__(self, game):
         self.game = game
-        self.settings = DEFAULT_SETTINGS
+        self.settings = {
+            "width": 800,
+            "height": 600,
+            "max_fps": 24,
+            "fullscreen": False,
+            "sfx_volume": 0.5,
+            "music_volume": 0.5
+        } | DEFAULT_SETTINGS
 
     def readSettingsFile(self, file_name="settings.json"):
         try:
