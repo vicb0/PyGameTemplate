@@ -10,7 +10,7 @@ class ScreenInterface(ABC):
         pass
 
     @abstractmethod
-    def update(self):
+    def update(self, dt):
         pass
 
     @abstractmethod
