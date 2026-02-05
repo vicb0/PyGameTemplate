@@ -13,6 +13,7 @@ from consts import metadata
 
 title = getattr(metadata, 'SCREEN_TITLE', 'pygame')
 screens_folder = getattr(metadata, 'SCREENS_FOLDER', 'screens')
+assets_folder = getattr(metadata, 'ASSETS_FOLDER', 'assets')
 
 def collect_project_submodules():
     modules = []
@@ -40,7 +41,7 @@ a = Analysis(
     binaries=[],
 
     datas=[
-        ('./assets', 'assets')
+        (assets_folder, assets_folder)
     ],
 
     hiddenimports=hiddenimports,
