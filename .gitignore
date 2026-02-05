@@ -4,3 +4,5 @@ dist/
 build/
 *.json
 *.pyc
+*.ico
+*.icns
