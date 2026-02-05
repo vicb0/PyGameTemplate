@@ -94,7 +94,6 @@ class Button:
 
         if self.mask:
             self.hovered = self.mask.get_at((local_x, local_y))
-            print(self.hovered)
         else:
             self.hovered = True
 
