@@ -1,4 +1,4 @@
-import os
+import pkgutil
 import importlib
 import inspect
 
@@ -31,18 +31,21 @@ class ScreensManager:
     def load_screens(self):
         screens = {}
 
-        for file in os.listdir(SCREENS_FOLDER):
-            if not file.endswith(".py") or file in ("__init__.py"):
-                continue
+        package = importlib.import_module(SCREENS_FOLDER)
 
-            module_name = file[:-3]
+        for _, module_name, is_pkg in pkgutil.iter_modules(package.__path__):
+            if is_pkg:
+                continue
 
             module = importlib.import_module(
                 f"{SCREENS_FOLDER}.{module_name}"
             )
 
             for name, obj in inspect.getmembers(module, inspect.isclass):
-                if name != module_name or obj.__module__ != module.__name__:
+                if name != module_name:
+                    continue
+
+                if obj.__module__ != module.__name__:
                     continue
 
                 if not issubclass(obj, ScreenInterface):
@@ -50,18 +53,16 @@ class ScreensManager:
                         f"{module_name} does not inherit from ScreenInterface"
                     )
 
-                key = module_name.lower()
-                screens[key] = obj
+                screens[module_name.lower()] = obj
                 break
             else:
                 raise Exception(
                     f"Could not locate valid class {module_name} "
-                    f"in {module_name}.py. "
-                    f"Make sure it matches the filename and "
-                    f"inherits from ScreenInterface."
+                    f"in {module_name}.py"
                 )
 
         return screens
+
 
     def screen_not_none(func):
         def wrapper(self, *args, **kwargs):
