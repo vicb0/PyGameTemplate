@@ -46,6 +46,7 @@ class AudioManager:
             channel.set_volume(self.game.settings_manager.getSetting("sfx_volume"))
         else:
             channel_id = self.sfxs[sfx_name]["channel_id"]
+            channel = self.sfxs[sfx_name]["channel"]
 
         self.sfxs[sfx_name] = {
             "channel_id": channel_id,
