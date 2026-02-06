@@ -64,8 +64,6 @@ base, _ = os.path.splitext(icon_path)
 
 def windows_icon(img):
     ico_path = base + ".ico"
-    if not os.path.exists(icon_path):
-        return None
 
     sizes = [(16,16), (32,32), (48,48), (64,64), (128,128), (256,256)]
 
@@ -75,8 +73,6 @@ def windows_icon(img):
 
 def mac_icon(img):
     icns_path = base + ".icns"
-    if not os.path.exists(icon_path):
-        return None
         
     sizes = [
         (16,16), (32,32), (64,64),
@@ -100,21 +96,22 @@ def mac_icon(img):
 
 def linux_icon(img):
     png_path = base + ".png"
-    if not os.path.exists(icon_path):
-        return None
 
     img.save(png_path, format="PNG")
 
     return png_path
 
-system = platform.system()
-img = Image.open(icon_path).convert("RGBA")
-if system == "Darwin":
-    icon_path = mac_icon(img)
-elif system == "Windows":
-    icon_path = windows_icon(img)
+if not os.path.exists(icon_path):
+    icon_path = None
 else:
-    icon_path = linux_icon(img)
+    img = Image.open(icon_path).convert("RGBA")
+    system = platform.system()
+    if system == "Darwin":
+        icon_path = mac_icon(img)
+    elif system == "Windows":
+        icon_path = windows_icon(img)
+    else:
+        icon_path = linux_icon(img)
 
 exe = EXE(
     pyz,
