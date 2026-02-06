@@ -72,8 +72,6 @@ class GameScreen(ScreenInterface):
                     new_char = chr(curr_ascii + 32 * (1 if curr_ascii < 97 else -1))
                     new_text = text_object.text[:idx] + new_char + text_object.text[idx+1:]
                     text_object.set_text(new_text)
-
-                    text_object.set_position(text_object.pos)
                 
                 if text_object.rect.topleft[0] < 0:
                     self.dx = 1
