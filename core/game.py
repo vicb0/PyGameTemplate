@@ -66,3 +66,4 @@ class Game:
 
     def close(self): 
         self.running = False
+        self.screens_manager.close()

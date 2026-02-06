@@ -82,3 +82,7 @@ class ScreensManager:
     def redraw(self):
         self.current_screen.draw()
         pygame.display.update()
+
+    @screen_not_none
+    def close(self):
+        self.current_screen.on_exit()
