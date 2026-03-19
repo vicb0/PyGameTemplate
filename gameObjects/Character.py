@@ -70,15 +70,15 @@ class Character:
         self.vx = 0
         self.vy = 0
 
-        if keys[pygame.K_LEFT]:
-            self.vx = -1
-        elif keys[pygame.K_RIGHT]:
-            self.vx = 1
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            self.vx += -1
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            self.vx += 1
 
-        if keys[pygame.K_UP]:
-            self.vy = -1
-        elif keys[pygame.K_DOWN]:
-            self.vy = 1
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
+            self.vy +=-1
+        if keys[pygame .K_DOWN] or keys[pygame.K_s]:
+            self.vy += 1
 
         if self.vx != 0 and self.vy != 0:
             length = (self.vx**2 + self.vy**2)**(1/2)
@@ -87,7 +87,7 @@ class Character:
 
         self.x += self.vx * self.speed * dt
         self.y += self.vy * self.speed * dt
-        self.rect.center = (self.x, self.y)
+
         self.change_direction()
         self.animations.update(dt)
 
