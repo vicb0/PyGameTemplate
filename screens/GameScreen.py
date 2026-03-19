@@ -19,6 +19,8 @@ class GameScreen(ScreenInterface):
     def on_key_down(self, event):
         if event.key == pygame.K_ESCAPE:
             self.game.screens_manager.set_screen("mainmenu")
+        elif event.key == pygame.K_SPACE:
+            self.game.screens_manager.set_screen("spritescreen")
 
     def event_handler(self, event):
         func = self.input_linker.get(event.type)
@@ -44,7 +46,7 @@ class GameScreen(ScreenInterface):
         title_font = pygame.font.SysFont(None, font_size)
 
         text_object = Text(
-            "Press ESC to go back\nto the main menu",
+            "Press ESC to go back\nto the main menu\nPress SPACE to go to\nthe sprite screen",
             title_font,
             (w // 2, h // 2),
             WHITE,
