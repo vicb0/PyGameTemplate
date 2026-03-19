@@ -9,6 +9,9 @@ class Character:
         self.x = x
         self.y = y
         self.rect = None
+        self.vx = 0
+        self.vy = 0
+        self.speed = 200
 
         self.animations = SpritesGroupManager()
 
@@ -45,14 +48,14 @@ class Character:
         self.rect = self.animations.get_curr_sprite().get_rect()
         self.rect.center = (self.x, self.y)
 
-    def change_direction(self, dir_x, dir_y):  
+    def change_direction(self):  
         flip_x = False
-        if dir_x != 0:
+        if self.vx != 0:
             state = "side"
-            flip_x = dir_x == 1
-        elif dir_y == 1:
+            flip_x = self.vx > 0
+        elif self.vy >= 0:
             state = "front"
-        elif dir_y == -1:
+        else:
             state = "back"
 
         self.change_state(state, flip_x, False)
@@ -62,10 +65,31 @@ class Character:
         self.update_rect()
 
     def update(self, dt):
-        new_sprite = self.animations.update(dt)
-        
-        if new_sprite is not None:
-            self.update_rect()
+        keys = pygame.key.get_pressed()
+
+        self.vx = 0
+        self.vy = 0
+
+        if keys[pygame.K_LEFT]:
+            self.vx = -1
+        elif keys[pygame.K_RIGHT]:
+            self.vx = 1
+
+        if keys[pygame.K_UP]:
+            self.vy = -1
+        elif keys[pygame.K_DOWN]:
+            self.vy = 1
+
+        if self.vx != 0 and self.vy != 0:
+            length = (self.vx**2 + self.vy**2)**(1/2)
+            self.vx /= length
+            self.vy /= length
+
+        self.x += self.vx * self.speed * dt
+        self.y += self.vy * self.speed * dt
+        self.rect.center = (self.x, self.y)
+        self.change_direction()
+        self.animations.update(dt)
 
     def draw(self, screen):
         screen.blit(self.animations.get_curr_sprite(), self.rect)

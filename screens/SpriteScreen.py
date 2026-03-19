@@ -23,14 +23,6 @@ class SpriteScreen(ScreenInterface):
     def on_key_down(self, event):
         if event.key == pygame.K_ESCAPE:
             self.game.screens_manager.set_screen("gamescreen")
-        elif event.key == pygame.K_LEFT:
-            self.character.change_direction(dir_x=-1, dir_y=0)
-        elif event.key == pygame.K_RIGHT:
-            self.character.change_direction(dir_x=1, dir_y=0)
-        elif event.key == pygame.K_UP:
-            self.character.change_direction(dir_x=0, dir_y=-1)
-        elif event.key == pygame.K_DOWN:
-            self.character.change_direction(dir_x=0, dir_y=1)
 
     def update(self, dt):
         for obj in self.drawables:
