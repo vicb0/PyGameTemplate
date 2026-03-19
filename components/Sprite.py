@@ -1,10 +1,22 @@
+from pygame import mask
 from pygame import transform
 
 
 class Sprite:
-    def __init__(self, image, duration):
+    def __init__(self, image, duration, mask_threshold=127):
         self.image = image
+        self.rect = image.get_rect()
+        self.mask = mask.from_surface(image, mask_threshold)
         self.duration = duration
+
+    def get_image(self):
+        return self.image
+
+    def get_mask(self):
+        return self.mask
+    
+    def get_rect(self):
+        return self.rect
 
 
 class SpriteAnimation:
@@ -23,12 +35,21 @@ class SpriteAnimation:
             updated = True
         
         if updated:
-            return self.get_curr_sprite()
+            return self.get_curr_sprite_obj()
         
         return None
 
+    def get_curr_sprite_obj(self):
+        return self.sprites[self.curr_index]
+    
+    def get_curr_rect(self):
+        return self.sprites[self.curr_index].get_rect()
+
     def get_curr_sprite(self):
-        return self.sprites[self.curr_index].image
+        return self.sprites[self.curr_index].get_image()
+
+    def get_curr_mask(self):
+        return self.sprites[self.curr_index].get_mask()
 
     def reset(self):
         self.timer = 0
@@ -100,5 +121,17 @@ class SpritesGroupManager:
         return self.curr_anim.update(dt)
 
     @only_if_has_state
+    def get_curr_rect(self):
+        return self.curr_anim.get_curr_rect()
+
+    @only_if_has_state
+    def get_curr_sprite_obj(self):
+        return self.curr_anim.get_curr_sprite_obj()
+
+    @only_if_has_state
     def get_curr_sprite(self):
         return self.curr_anim.get_curr_sprite()
+    
+    @only_if_has_state
+    def get_curr_mask(self):
+        return self.curr_anim.get_curr_mask()

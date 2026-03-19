@@ -2,6 +2,7 @@ import pygame
 
 from components.Sprite import SpritesGroupManager, Sprite
 from utils.imageUtils import load_scaled_image
+from consts.colors import *
 
 
 class Character:
@@ -9,6 +10,7 @@ class Character:
         self.x = x
         self.y = y
         self.rect = None
+        
         self.vx = 0
         self.vy = 0
         self.speed = 200
@@ -45,7 +47,7 @@ class Character:
         self.change_state("front")
 
     def update_rect(self):
-        self.rect = self.animations.get_curr_sprite().get_rect()
+        self.rect = self.animations.get_curr_rect()
         self.rect.center = (self.x, self.y)
 
     def change_direction(self):  
@@ -93,3 +95,9 @@ class Character:
 
     def draw(self, screen):
         screen.blit(self.animations.get_curr_sprite(), self.rect)
+
+    def get_mask(self):
+        return self.animations.get_curr_mask()
+    
+    def get_rect(self):
+        return self.rect
