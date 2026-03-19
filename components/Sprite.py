@@ -23,7 +23,7 @@ class SpriteAnimation:
             updated = True
         
         if updated:
-            self.get_curr_sprite()
+            return self.get_curr_sprite()
         
         return None
 
